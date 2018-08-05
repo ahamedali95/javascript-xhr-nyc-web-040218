@@ -2,8 +2,25 @@
 //   console.log(event, data);
 // })
 
-function showCommits(element) {
-  console.log(element)
+function showCommits(event) {
+  const commits = document.getElementById("commits");
+  const data = JSON.parse(this.responseText);
+  let list = "<ul>";
+
+  data.forEach(commitObj => {
+    list += `<li>${commitObj.commit.message} - ${commitObj.author.name}</li>`;
+  });
+
+  list += "</ul>";
+  commits.innerHTML = list;
+}
+
+function getCommits(element) {
+  const repoName = element.dataset.repo;
+  const request = new XMLHttpRequest();
+  request.addEventListener("load", showCommits);
+  request.open("GET", 'https://api.github.com/repos/ahamedali95/' + repoName + '/commits');
+  request.send();
 }
 
 function showRepositories(event) {
@@ -12,7 +29,7 @@ function showRepositories(event) {
   let list = "<ul>";
 
   data.forEach(repo => {
-    list += `<li>${repo.name} <a href="#" data-repo="${repo.name}" onClick="showCommits(this)">Get commits</a></li>`;
+    list += `<li>${repo.name} <a href="#" data-repo="${repo.name}" onClick="getCommits(this)">Get commits</a></li>`;
   });
 
   list += "</ul>";
